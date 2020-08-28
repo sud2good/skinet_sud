@@ -9,12 +9,12 @@ using Core.Interfaces;
 using Core.Specifications;
 using API.Dtos;
 using AutoMapper;
+using API.Errors;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+
+    public class ProductsController : BaseApiController
     {
         //private readonly StoreContext _context;
         // private readonly IProductRepository _repo;
@@ -81,6 +81,11 @@ namespace API.Controllers
             //     ProductBrand = product.ProductBrand.Name,
             //     ProductType = product.ProductType.Name
             // };
+
+            if (product == null)
+            {
+                return NotFound(new ApiResponse(404));
+            }
 
             return _mapper.Map<Product,ProductToReturnDto>(product);
         }

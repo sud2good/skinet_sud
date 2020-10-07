@@ -24,7 +24,7 @@ namespace API.Controllers
         ITokenService tokenService, IMapper mapper )
         {
             _tokenService = tokenService;
-            _signInManager = signInManager;
+            _signInManager = signInManager; 
             _userManager = userManager;
             _mapper = mapper;
         }
@@ -107,6 +107,12 @@ namespace API.Controllers
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
+        if (CheckEmailExistsAsync(registerDto.Email).Result.Value)
+        {
+            return new BadRequestObjectResult(new ApiValidationErrorResponse{Errors = new []
+            {"Email already in Use"}});
+        }
+
         var user = new AppUser
         {
             DisplayName = registerDto.DisplayName,

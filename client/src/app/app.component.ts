@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BasketService } from './basket/basket.service';
+import { AccountService } from './account/account.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,7 @@ export class AppComponent implements OnInit {
   // products: IProduct[];
 
   // constructor(private http: HttpClient){
-    constructor(private basketService: BasketService){
+    constructor(private basketService: BasketService, private accountService: AccountService){
   }
 
 ngOnInit(): void {
@@ -23,6 +25,23 @@ ngOnInit(): void {
     // }, error => {
     //   console.log(error);
     // });
+    this.loadBasket();
+    this.loadCurrentUser();
+
+
+}
+
+loadCurrentUser() {
+  const token = localStorage.getItem('token');
+  // if (token) {
+  this.accountService.loadCurrentUser(token).subscribe(() => {
+      console.log('User loaded');
+    },  error => {
+      console.log(error);
+    });
+}
+
+loadBasket(){
   const basketId = localStorage.getItem('basket_id');
   if (basketId) {
     this.basketService.getBasket(basketId).subscribe(() => {
